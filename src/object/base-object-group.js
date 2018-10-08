@@ -1,8 +1,8 @@
 /**
 * BaseObjectGroup
 */
-var BaseObject = require('js/object/base-object.js');
-var util = require('js/util.js');
+var BaseObject = require('object/base-object');
+var util = require('util');
 var BaseObjectGroup = function (context, attrs) {
     BaseObject.call(this, context, attrs);
 
@@ -44,4 +44,4 @@ BaseObjectGroup.prototype.getScrollableY = function () {
     return this.scrollableY;
 };
 
-exports = BaseObjectGroup;
+module.exports = BaseObjectGroup;

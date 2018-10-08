@@ -1,6 +1,6 @@
-var stage = require('js/stage.js');
-var scene = require('js/scene.js');
-var object = require('js/object');
+var stage = require('stage');
+var scene = require('scene');
+var object = require('object');
 
 var mystage = stage.New();
 var sb = scene.New('background-scene');

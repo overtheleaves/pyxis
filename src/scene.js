@@ -1,4 +1,4 @@
-var util = require('js/util.js');
+var util = require('util');
 
 exports.New = function(canvasId) {
     return new Scene(canvasId);

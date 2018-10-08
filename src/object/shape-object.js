@@ -1,9 +1,9 @@
 /**
 * ShapeObject
 */
-var BaseObject = require('js/object/base-object.js');
-var BaseObjectGroup = require('js/object/base-object-group.js');
-var util = require('js/util.js');
+var BaseObject = require('object/base-object');
+var BaseObjectGroup = require('object/base-object-group');
+var util = require('util');
 
 var ShapeObject = function(context, attrs) {
     BaseObject.call(this, context, attrs);
@@ -24,4 +24,4 @@ ShapeObject.prototype.requestDraw = function() {
     }
 };
 
-exports = ShapeObject;
+module.exports = ShapeObject;

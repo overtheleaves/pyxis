@@ -1,7 +1,7 @@
 /**
 * BaseObject
 */
-var util = require('js/util.js');
+var util = require('util');
 
 var BaseObject = function(context, attrs) {
     // assert
@@ -90,4 +90,4 @@ BaseObject.prototype.setMargin = function(margin) {
     if (!util.isNullOrUndefined(margin.right)) this.margin.right = margin.right;
 };
 
-exports = BaseObject;
+module.exports = BaseObject;

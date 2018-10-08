@@ -1,9 +1,9 @@
 /**
 * LinearObjectGroup
 */
-var BaseObject = require('js/object/base-object.js');
-var BaseObjectGroup = require('js/object/base-object-group.js');
-var util = require('js/util.js');
+var BaseObject = require('object/base-object');
+var BaseObjectGroup = require('object/base-object-group');
+var util = require('util');
 
 var VERTICAL = 'vertical';
 var HORIZONTAL = 'horizontal';
@@ -57,4 +57,4 @@ LinearObjectGroup.prototype.requestDraw = function () {
     util.super(BaseObjectGroup, 'requestDraw', this);
 };
 
-exports = LinearObjectGroup;
+module.exports = LinearObjectGroup;

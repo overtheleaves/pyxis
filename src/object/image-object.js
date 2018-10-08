@@ -1,8 +1,8 @@
 /**
 * ImageObject
 */
-var BaseObject = require('js/object/base-object.js');
-var util = require('js/util.js');
+var BaseObject = require('object/base-object');
+var util = require('util');
 
 var ImageObject = function(context, attrs) {
     BaseObject.call(this, context, attrs);
@@ -30,4 +30,4 @@ ImageObject.prototype.requestDraw = function() {
     this.image.src = this.src;
 };
 
-exports = ImageObject;
+module.exports = ImageObject;
