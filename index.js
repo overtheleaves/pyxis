@@ -1,6 +1,7 @@
 var stage = require('stage');
 var scene = require('scene');
 var object = require('object');
+var objectGroup = require('object-group');
 
 var mystage = stage.New();
 var sb = scene.New('background-scene');
@@ -8,7 +9,7 @@ var sl = scene.New('layout-scene');
 var slcontext = sl.getContext();
 var sbcontext = sb.getContext();
 
-var linear = object.GroupFactory(slcontext,
+var linear = objectGroup.GroupFactory(slcontext,
     { range : { width: {type: 'ratio', value: 1.0},
     height: {type: 'ratio', value: 1.0} },
     type : 'linear',
@@ -17,13 +18,13 @@ var linear = object.GroupFactory(slcontext,
     verticalMargin: 10,
     scrollableY: true});
 
-var linear2 = object.GroupFactory(slcontext,
+var linear2 = objectGroup.GroupFactory(slcontext,
     { range : { width: {type: 'ratio', value: 1.0},
     height: {type: 'ratio', value: 1.0}},
     type : 'linear',
     orientation : 'vertical'});
 
-var staggered = object.GroupFactory(slcontext,
+var staggered = objectGroup.GroupFactory(slcontext,
     { range : { width: {type: 'ratio', value: 1.0},
     height: {type: 'ratio', value: 1.0} },
     type : 'staggered',

@@ -2,7 +2,7 @@
 * StaggeredGridObjectGroup
 */
 var BaseObject = require('object/base-object');
-var BaseObjectGroup = require('object/base-object-group');
+var BaseObjectGroup = require('object-group/base-object-group');
 var util = require('util');
 
 var StaggeredGridObjectGroup = function (context, attrs) {

@@ -2,7 +2,6 @@
 * ShapeObject
 */
 var BaseObject = require('object/base-object');
-var BaseObjectGroup = require('object/base-object-group');
 var util = require('util');
 
 var ShapeObject = function(context, attrs) {
