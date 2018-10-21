@@ -6,33 +6,48 @@ var objectGroup = require('object-group');
 var mystage = stage.New();
 var sb = scene.New('background-scene');
 var sl = scene.New('layout-scene');
+var sc = scene.New('constraints-scene');
 var slcontext = sl.getContext();
 var sbcontext = sb.getContext();
+var sccontext = sc.getContext();
 
 var linear = objectGroup.GroupFactory(slcontext,
-    { range : { width: {type: 'ratio', value: 1.0},
-    height: {type: 'ratio', value: 1.0} },
-    type : 'linear',
-    orientation : 'vertical',
-    margin: {top: 10, left: 10, right: 10, bottom: 10},
-    verticalMargin: 10,
-    scrollableY: true});
+    {
+        range : { width: {type: 'ratio', value: 1.0},
+        height: {type: 'ratio', value: 1.0} },
+        type : 'linear',
+        orientation : 'vertical',
+        margin: {top: 10, left: 10, right: 10, bottom: 10},
+        verticalMargin: 10,
+        scrollableY: true
+    });
 
 var linear2 = objectGroup.GroupFactory(slcontext,
-    { range : { width: {type: 'ratio', value: 1.0},
-    height: {type: 'ratio', value: 1.0}},
-    type : 'linear',
-    orientation : 'vertical'});
+    {
+        range : { width: {type: 'ratio', value: 1.0},
+        height: {type: 'ratio', value: 1.0}},
+        type : 'linear',
+        orientation : 'vertical'
+    });
 
 var staggered = objectGroup.GroupFactory(slcontext,
-    { range : { width: {type: 'ratio', value: 1.0},
-    height: {type: 'ratio', value: 1.0} },
-    type : 'staggered',
-    column: 2,
-    scrollableY: true,
-    columnMargin: 10,
-    rowMargin: 10,
-    margin: {top: 10, left: 10, right: 10, bottom: 10}});
+    {
+        range : { width: {type: 'ratio', value: 1.0},
+                height: {type: 'ratio', value: 1.0} },
+        type : 'staggered',
+        column: 2,
+        scrollableY: true,
+        columnMargin: 10,
+        rowMargin: 10,
+        margin: {top: 10, left: 10, right: 10, bottom: 10
+    }});
+
+var constraints = objectGroup.GroupFactory(sccontext,
+    {
+        type: 'constraints',
+        range : { width: {type: 'ratio', value: 1.0},
+                height: {type: 'ratio', value: 1.0} }
+    });
 
 var shapeObject1 = object.Factory(sbcontext,
     { range : { width: {type: 'ratio', value: 1.0},
@@ -62,11 +77,15 @@ for (var i = 0; i < 30; i++) {
 }
 
 linear2.addChild(shapeObject1);
+constraints.addChild(shapeObject1);
+constraints.addConstraint(shapeObject1, 0, shapeObject2);
 
 sl.setObjectGroup(linear);
 sb.setObjectGroup(linear2);
+sc.setObjectGroup(constraints);
 
 mystage.addScene(sb);
 mystage.addScene(sl);
+mystage.addScene(sc);
 
 mystage.draw();

@@ -8,22 +8,22 @@ exports.integerFormat = function (val, radix) {
     }
 
     return ret;
-}
+};
 
 exports.isNullOrUndefined = function (obj) {
     return typeof obj == 'undefined' || obj == null;
-}
+};
 
 exports.assert = function (condition, message) {
     if (!condition) {
         throw message || "Assertion Failed";
     }
-}
+};
 
 exports.inherit = function (target, parent) {
     target.prototype = Object.create(parent.prototype);
     target.prototype.constructor = target;
-}
+};
 
 exports.super = function () {
     exports.assert(arguments.length >= 3,
@@ -38,4 +38,19 @@ exports.super = function () {
     }
 
     target.prototype[fname].apply(thisArg, args);
-}
+};
+
+var objectId = 1;
+var objectIdMap = {};
+exports.generateObjectId = function (alias) {
+    var id;
+    if (alias) {
+        if (!objectIdMap[alias]) objectIdMap[alias] = objectId++;
+        id = objectIdMap[alias];
+    } else {
+        objectId++;
+        id = objectId;
+    }
+
+    return id;
+};

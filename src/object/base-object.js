@@ -10,13 +10,14 @@ var BaseObject = function(context, attrs) {
 
     // initialize properties
     this.context = context;
+    this.id = util.generateObjectId(attrs.id);
     this.x = 0;
     this.y = 0;
     this.width = 0;
     this.height = 0;
     this.margin = util.isNullOrUndefined(attrs.margin) ?
-    {top: 0, bottom: 0, left: 0, right: 0} :
-    attrs.margin;
+                {top: 0, bottom: 0, left: 0, right: 0} :
+                attrs.margin;
     if (util.isNullOrUndefined(this.margin.top)) this.margin.top = 0;
     if (util.isNullOrUndefined(this.margin.left)) this.margin.left = 0;
     if (util.isNullOrUndefined(this.margin.right)) this.margin.right = 0;

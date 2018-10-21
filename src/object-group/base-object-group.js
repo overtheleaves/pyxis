@@ -7,6 +7,7 @@ var BaseObjectGroup = function (context, attrs) {
     BaseObject.call(this, context, attrs);
 
     this.children = [];
+    this.id = util.generateObjectId(attrs.id);
     this.scrollableX = util.isNullOrUndefined(attrs.scrollableX) ? false : attrs.scrollableX;
     this.scrollableY = util.isNullOrUndefined(attrs.scrollableY) ? false : attrs.scrollableY;
 };
