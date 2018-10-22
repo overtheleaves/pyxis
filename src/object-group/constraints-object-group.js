@@ -4,19 +4,7 @@
 var BaseObject = require('object/base-object');
 var BaseObjectGroup = require('object-group/base-object-group');
 var util = require('util');
-
-var Constraint = {
-    LEFT_OF: 0,
-    RIGHT_OF: 1,
-    TOP_OF: 2,
-    BOTTOM_OF: 3,
-    LEFT_PARENT: 4,
-    RIGHT_PARENT: 5,
-    TOP_PARENT: 6,
-    BOTTOM_PARENT: 7,
-    VERTICAL_CENTER_PARENT: 8,
-    HORIZONTAL_CENTER_PARENT: 9
-};
+var Constraints = require('object-group/constants').Constraints;
 
 var ConstraintsObjectGroup = function (context, attrs) {
     BaseObjectGroup.call(this, context, attrs);
@@ -30,22 +18,71 @@ util.inherit(ConstraintsObjectGroup, BaseObjectGroup);
 ConstraintsObjectGroup.prototype.requestMeasureRange = function(parentWidth, parentHeight) {
     util.super(BaseObject, 'requestMeasureRange', this, parentWidth, parentHeight);
 
-    for (var i = 0; i < this.children.length; i++) {
-        var c = this.children[i];
-        c.requestMeasureRange(this.width, this.height);
-    }
+    var self = this;
+    // traverse object tree
+    this.objectTree.traverse(function(node) {
+        var object = node.object;
+        var children = node.children;
+        var constraints = node.constraints;
+
+        // calculate range
+        var width = self.width;
+        var height = self.height;
+
+        for (var i = 0; i < children.length; i++) {
+            var constraint = constraints[i];
+            var child = children[i].object;
+            if (constraint == Constraints.LEFT_OF || constraint == Constraints.RIGHT_OF) {
+                width -= child.width;
+                width = width < 0 ? 0 : width;
+            }
+            if (constraint == Constraints.TOP_OF || constraint == Constraints.BOTTOM_OF) {
+                height -= child.height;
+                height = height < 0 ? 0 : height;
+            }
+        }
+
+        console.log('width = ' + width + ' height = ' + height);
+        object.requestMeasureRange(width, height);
+    });
 };
 
 ConstraintsObjectGroup.prototype.requestChangePosition = function(x, y) {
     util.super(BaseObject, 'requestChangePosition', this, x, y);
 
-    x = this.x;
-    y = this.y;
+    var self = this;
+    // traverse object tree
+    this.objectTree.traverse(function(node) {
+        var object = node.object;
+        var children = node.children;
+        var constraints = node.constraints;
 
-    for (var i = 0; i < this.children.length; i++) {
-        var c = this.children[i];
-        c.requestChangePosition(x, y);
-    }
+        // calculate position
+        var x = self.x;
+        var y = self.y;
+
+        for (var i = 0; i < children.length; i++) {
+            var constraint = constraints[i];
+            var child = children[i].object;
+
+            switch (constraint) {
+                case Constraints.RIGHT_OF:
+                    x += child.width;
+                    break;
+
+                case Constraints.BOTTOM_OF:
+                    y += child.height;
+                    break;
+
+                case Constraints.RIGHT_PARENT:
+                    x = self.width - object.width;
+                    break;
+            }
+        }
+
+        console.log('x = ' + x + ' y = ' + y);
+        object.requestChangePosition(x, y);
+    });
 };
 
 ConstraintsObjectGroup.prototype.addChild = function(child) {
@@ -66,6 +103,29 @@ ConstraintsObjectGroup.prototype.requestDraw = function () {
 var ObjectTree = function() {
     this.root = new ObjectTreeNode();   // virtual root node
     this.nodes = {};                    // node references for finding quickly
+    this.visited = [];                  // visted mark array (for traverse)
+    this.parent = new ObjectTreeNode(); // virtual parent
+};
+
+ObjectTree.prototype.traverse = function(callback) {
+    this.visited = [];
+    this._traverse(this.root, callback);
+};
+
+ObjectTree.prototype._traverse = function(node, callback) {
+    // cycle detected
+    util.assert(util.isNullOrUndefined(node.object) || !this.visited[node.object.id], "object tree has cycle");
+
+    if (!util.isNullOrUndefined(node.object))
+        this.visited[node.object.id] = true;
+
+    // visit children
+    for (var child of node.children) {
+        this._traverse(child, callback);
+    }
+
+    // invoke callback when nodes are not vitrual
+    if (node != this.root && node != this.parent) callback(node);
 };
 
 ObjectTree.prototype.addRootChild = function(childObject) {
@@ -76,19 +136,25 @@ ObjectTree.prototype.addRootChild = function(childObject) {
 
 ObjectTree.prototype.addChild = function(targetObject, constraint, otherObject) {
 
-    this.root.removeChildById(otherObject.id);
+    if (util.isNullOrUndefined(otherObject)) {
+        // dependant on parent
+        var targetTreeNode = this.nodes[targetObject.id];
+        targetTreeNode.addChild(this.parent, constraint);
+    } else {
+        this.root.removeChildById(otherObject.id);
 
-    var targetTreeNode = this.nodes[targetObject.id];
-    var otherTreeNode = this.nodes[otherObject.id];
+        var targetTreeNode = this.nodes[targetObject.id];
+        var otherTreeNode = this.nodes[otherObject.id];
 
-    if (util.isNullOrUndefined(targetTreeNode)) {
-        targetTreeNode = this.nodes[targetObject.id] = new ObjectTreeNode(targetObject);
+        if (util.isNullOrUndefined(targetTreeNode)) {
+            targetTreeNode = this.nodes[targetObject.id] = new ObjectTreeNode(targetObject);
+        }
+
+        if (util.isNullOrUndefined(otherTreeNode))
+            otherTreeNode = this.nodes[otherObject.id] = new ObjectTreeNode(otherObject);
+
+        targetTreeNode.addChild(otherTreeNode, constraint);
     }
-
-    if (util.isNullOrUndefined(otherTreeNode))
-        otherTreeNode = this.nodes[otherObject.id] = new ObjectTreeNode(otherObject);
-
-    targetTreeNode.addChild(otherTreeNode, constraint);
 };
 
 var ObjectTreeNode = function(object) {

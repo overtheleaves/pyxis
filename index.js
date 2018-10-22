@@ -73,12 +73,39 @@ for (var i = 0; i < 30; i++) {
         shape : 'rect',
         fillStyle : '#00ABEB'});
 
-    linear.addChild(shapeObj);
+    //linear.addChild(shapeObj);
 }
 
-linear2.addChild(shapeObject1);
-constraints.addChild(shapeObject1);
-constraints.addConstraint(shapeObject1, 0, shapeObject2);
+//linear2.addChild(shapeObject1);
+var shapeObject3 = object.Factory(slcontext,
+    { range : { width: {type: 'absolute', value: 100},
+    height: {type: 'absolute', value: 500} },
+    type : 'shape',
+    shape : 'rect',
+    fillStyle : '#00ABEB'});
+
+var shapeObject4 = object.Factory(slcontext,
+    { range : { width: {type: 'ratio', value: 1.0},
+                height: {type: 'absolute', value: 500} },
+    type : 'shape',
+    shape : 'rect',
+    fillStyle : '#b18bd6'});
+
+var shapeObject5 = object.Factory(slcontext,
+    { range : { width: {type: 'absolute', value: 50},
+            height: {type: 'absolute', value: 500} },
+    type : 'shape',
+    shape : 'rect',
+    fillStyle : '#00ABEB'});
+
+constraints.addChild(shapeObject3);
+constraints.addChild(shapeObject4);
+constraints.addChild(shapeObject5);
+
+constraints.addConstraint(shapeObject4, objectGroup.Constraints.RIGHT_OF, shapeObject3);
+constraints.addConstraint(shapeObject4, objectGroup.Constraints.LEFT_OF, shapeObject5);
+constraints.addConstraint(shapeObject3, objectGroup.Constraints.LEFT_PARENT);
+constraints.addConstraint(shapeObject5, objectGroup.Constraints.RIGHT_PARENT);
 
 sl.setObjectGroup(linear);
 sb.setObjectGroup(linear2);

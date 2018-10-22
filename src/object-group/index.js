@@ -2,6 +2,10 @@ var LinearObjectGroup = require('object-group/linear-object-group');
 var StaggeredGridObjectGroup = require('object-group/staggered-grid-object-group');
 var ConstraintsObjectGroup = require('object-group/constraints-object-group');
 
+var Constants = require('object-group/constants');
+
+exports.Constraints = Constants.Constraints;
+
 exports.GroupFactory = function(context, attrs) {
     if (attrs.type == 'linear') {
         return new LinearObjectGroup(context, attrs);
